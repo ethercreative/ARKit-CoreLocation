@@ -1,0 +1,44 @@
+[
+ {
+ "name": "Титан",
+ "pinImage": "pin",
+ "latitude": 53.888154,
+ "longitude": 27.544086,
+ "altitude": 170
+ },
+ {
+ "name": "Столовая РУП Белмедпрепараты down",
+ "pinImage": "circle",
+ "latitude": 53.886441,
+ "longitude": 27.534545,
+ "altitude": 160
+ },
+ {
+ "name": "Столовая РУП Белмедпрепараты top",
+ "pinImage": "circle",
+ "latitude": 53.886441,
+ "longitude": 27.534545,
+ "altitude": 230
+ },
+ {
+ "name": "улица Фабрициуса 28",
+ "pinImage": "circle",
+ "latitude": 53.886969,
+ "longitude": 27.534964,
+ "altitude": 170
+ },
+ {
+ "name": "улица Фабрициуса 26",
+ "pinImage": "circle",
+ "latitude": 53.887535,
+ "longitude": 27.535334,
+ "altitude": 165
+ },
+ {
+ "name": "Дом быта",
+ "pinImage": "circle",
+ "latitude": 53.886855,
+ "longitude": 27.536627,
+ "altitude": 200
+ }
+ ]
