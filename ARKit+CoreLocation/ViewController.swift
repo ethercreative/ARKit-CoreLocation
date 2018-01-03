@@ -10,6 +10,7 @@ import UIKit
 import SceneKit 
 import MapKit
 import CocoaLumberjack
+import ARKit
 
 @available(iOS 11.0, *)
 class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate {
@@ -18,25 +19,26 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     let mapView = MKMapView()
     var userAnnotation: MKPointAnnotation?
     var locationEstimateAnnotation: MKPointAnnotation?
+    var currentLocationAnnotationNode: LocationAnnotationNode?
     
     var updateUserLocationTimer: Timer?
     
     ///Whether to show a map view
     ///The initial value is respected
-    var showMapView: Bool = false
+    var showMapView: Bool = true
     
     var centerMapOnUserLocation: Bool = true
     
     ///Whether to display some debugging data
     ///This currently displays the coordinate of the best location estimate
     ///The initial value is respected
-    var displayDebugging = false
+    var displayDebugging = true
     
     var infoLabel = UILabel()
     
     var updateInfoLabelTimer: Timer?
     
-    var adjustNorthByTappingSidesOfScreen = false
+    var adjustNorthByTappingSidesOfScreen = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,11 +69,36 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         }
         
         //Currently set to Canary Wharf
-        let pinCoordinate = CLLocationCoordinate2D(latitude: 51.504607, longitude: -0.019592)
-        let pinLocation = CLLocation(coordinate: pinCoordinate, altitude: 236)
-        let pinImage = UIImage(named: "pin")!
-        let pinLocationNode = LocationAnnotationNode(location: pinLocation, image: pinImage)
-        sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: pinLocationNode)
+        //53.888154, 27.544086
+        if let path = Bundle.main.path(forResource: "locations", ofType: "json") {
+            do {
+                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+                let jsonResult = try JSONSerialization.jsonObject(with: data, options: .mutableLeaves)
+                if let jsonResult = jsonResult as? [[String: Any]] {
+                    for var dictinary in jsonResult {
+                        let pinCenterCoordinate = CLLocationCoordinate2D(latitude: dictinary["latitude"] as! CLLocationDegrees, longitude: dictinary["longitude"] as! CLLocationDegrees)
+                        let pinCenterLocation = CLLocation(coordinate: pinCenterCoordinate, altitude: dictinary["altitude"] as! CLLocationDegrees)
+                        let pinCenterImage = UIImage(named: dictinary["pinImage"] as! String)!
+                        let pinCenterLocationNode = LocationAnnotationNode(location: pinCenterLocation, image: pinCenterImage, titlePlace: dictinary["name"] as? String)
+                        sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: pinCenterLocationNode)
+                    }
+                }
+            } catch {
+            }
+        }
+        
+//        let pinCenterCoordinate = CLLocationCoordinate2D(latitude: 53.888154, longitude: 27.544086)
+//        let pinCenterLocation = CLLocation(coordinate: pinCenterCoordinate, altitude: 170)
+//        let pinCenterImage = UIImage(named: "pin")!
+//        let pinCenterLocationNode = LocationAnnotationNode(location: pinCenterLocation, image: pinCenterImage, titlePlace: "Titan")
+//        sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: pinCenterLocationNode)
+//        
+//        //53.886454, 27.534621
+//        let pinCoordinate = CLLocationCoordinate2D(latitude: 53.886454, longitude: 27.534621)
+//        let pinLocation = CLLocation(coordinate: pinCoordinate, altitude: 230)
+//        let pinImage = UIImage(named: "circle")!
+//        let pinLocationNode = LocationAnnotationNode(location: pinLocation, image: pinImage, titlePlace: "BelMed")
+//        sceneLocationView.addLocationNodeWithConfirmedLocation(locationNode: pinLocationNode)
         
         view.addSubview(sceneLocationView)
         
@@ -196,6 +223,15 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             infoLabel.text = "x: \(String(format: "%.2f", position.x)), y: \(String(format: "%.2f", position.y)), z: \(String(format: "%.2f", position.z))\n"
         }
         
+        if let currentLocationAnnotationNode = currentLocationAnnotationNode {
+            infoLabel.text!.append("Title x: \(currentLocationAnnotationNode.titlePlace!)")
+            if let currentLocation = sceneLocationView.currentLocation() {
+                let distance = currentLocationAnnotationNode.location.distance(from: currentLocation)
+                infoLabel.text!.append(", distance: \(String(format: "%.2f", distance))")
+            }
+            infoLabel.text!.append("\n")
+        }
+        
         if let eulerAngles = sceneLocationView.currentEulerAngles() {
             infoLabel.text!.append("Euler x: \(String(format: "%.2f", eulerAngles.x)), y: \(String(format: "%.2f", eulerAngles.y)), z: \(String(format: "%.2f", eulerAngles.z))\n")
         }
@@ -223,23 +259,42 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                     centerMapOnUserLocation = false
                 } else {
                     
-                    let location = touch.location(in: self.view)
-
-                    if location.x <= 40 && adjustNorthByTappingSidesOfScreen {
-                        print("left side of the screen")
-                        sceneLocationView.moveSceneHeadingAntiClockwise()
-                    } else if location.x >= view.frame.size.width - 40 && adjustNorthByTappingSidesOfScreen {
-                        print("right side of the screen")
-                        sceneLocationView.moveSceneHeadingClockwise()
-                    } else {
-                        let image = UIImage(named: "pin")!
-                        let annotationNode = LocationAnnotationNode(location: nil, image: image)
-                        annotationNode.scaleRelativeToDistance = true
-                        sceneLocationView.addLocationNodeForCurrentPosition(locationNode: annotationNode)
+                    let sceneView = self.sceneLocationView
+                    let location = touch.location(in: sceneView)
+                    let hitTest = sceneView.hitTest(location)
+                    
+                    if (!hitTest.isEmpty) {
+                        let results = hitTest.first!
+                        let currentNode = results.node
+                        if let locationNode = getLocationNode(node: currentNode) {
+                            currentLocationAnnotationNode = locationNode
+                            DDLogDebug("")
+                            DDLogDebug("title: \(locationNode.titlePlace!)")
+                            let distance = locationNode.location.distance(from: sceneView.currentLocation()!)
+                            DDLogDebug("distance: \(distance)")
+                        }
                     }
+//                    let location = touch.location(in: self.sceneLocationView)
+//
+//                    if location.x <= 40 && adjustNorthByTappingSidesOfScreen {
+//                        print("left side of the screen")
+//                        sceneLocationView.moveSceneHeadingAntiClockwise()
+//                    } else if location.x >= view.frame.size.width - 40 && adjustNorthByTappingSidesOfScreen {
+//                        print("right side of the screen")
+//                        sceneLocationView.moveSceneHeadingClockwise()
+//                    }
                 }
             }
         }
+    }
+    
+    func getLocationNode(node: SCNNode) -> LocationAnnotationNode? {
+        if node.isKind(of: LocationNode.self) {
+            return node as? LocationAnnotationNode
+        } else if let parentNode = node.parent {
+            return getLocationNode(node: parentNode)
+        }
+        return nil
     }
     
     //MARK: MKMapViewDelegate
@@ -278,6 +333,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     }
     
     func sceneLocationViewDidConfirmLocationOfNode(sceneLocationView: SceneLocationView, node: LocationNode) {
+    
     }
     
     func sceneLocationViewDidSetupSceneNode(sceneLocationView: SceneLocationView, sceneNode: SCNNode) {
