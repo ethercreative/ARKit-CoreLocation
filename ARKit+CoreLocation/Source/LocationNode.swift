@@ -81,12 +81,18 @@ open class LocationAnnotationNode: LocationNode {
         
         guard let bubbleView: BubbleView = Bundle.main.loadNibNamed("BubbleView", owner: self, options: nil)?.first as? BubbleView else {return}
         let width: CGFloat = 200
-        let height: CGFloat = 100
+        let height: CGFloat = 80
         bubbleView.frame = CGRect(x: 0, y: 0, width: width, height: height)
         bubbleView.placeText.text = titlePlace
+        bubbleView.layoutIfNeeded()
+        
+        UIGraphicsBeginImageContextWithOptions(bubbleView.bounds.size, false, UIScreen.main.scale);
+        bubbleView.layer.render(in: UIGraphicsGetCurrentContext()!)
+        let screenShot = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
         
         let plane = SCNPlane(width: width / 100.0, height: height / 100.0)
-        plane.firstMaterial!.diffuse.contents = bubbleView
+        plane.firstMaterial!.diffuse.contents = screenShot
         plane.firstMaterial!.lightingModel = .constant
         
         annotationNode.geometry = plane

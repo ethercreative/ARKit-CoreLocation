@@ -16,6 +16,12 @@
             <rect key="frame" x="0.0" y="0.0" width="375" height="140"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
+                <imageView userInteractionEnabled="NO" alpha="0.59999999999999998" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_triangle" translatesAutoresizingMaskIntoConstraints="NO" id="iFT-kG-ODH">
+                    <rect key="frame" x="167" y="120" width="40" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="40" id="pXG-lb-30C"/>
+                    </constraints>
+                </imageView>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y1L-Ku-aq4">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
                     <subviews>
@@ -32,7 +38,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstItem="bSe-Ck-NcW" firstAttribute="leading" secondItem="8Zk-G2-WVe" secondAttribute="trailing" constant="20" id="9SU-xj-NxZ"/>
                         <constraint firstItem="8Zk-G2-WVe" firstAttribute="centerY" secondItem="Y1L-Ku-aq4" secondAttribute="centerY" id="Upt-vY-gyW"/>
@@ -41,23 +47,16 @@
                         <constraint firstItem="8Zk-G2-WVe" firstAttribute="leading" secondItem="Y1L-Ku-aq4" secondAttribute="leading" constant="20" id="yEG-Go-rWJ"/>
                     </constraints>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dCe-TU-ocV">
-                    <rect key="frame" x="0.0" y="138" width="375" height="2"/>
-                    <color key="backgroundColor" red="0.21176470589999999" green="0.79607843140000001" blue="0.4431372549" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="2" id="TKP-8D-euv"/>
-                    </constraints>
-                </view>
             </subviews>
-            <color key="backgroundColor" red="0.93725490199999995" green="0.48627450979999998" blue="0.52941176469999995" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="Y1L-Ku-aq4" firstAttribute="top" secondItem="rBd-94-hz9" secondAttribute="top" id="1Is-Ks-QWh"/>
                 <constraint firstItem="Y1L-Ku-aq4" firstAttribute="leading" secondItem="rBd-94-hz9" secondAttribute="leading" id="HHE-bs-GFJ"/>
-                <constraint firstItem="dCe-TU-ocV" firstAttribute="leading" secondItem="rBd-94-hz9" secondAttribute="leading" id="JA8-Wn-59O"/>
                 <constraint firstItem="rBd-94-hz9" firstAttribute="bottom" secondItem="Y1L-Ku-aq4" secondAttribute="bottom" constant="20" id="SM5-If-hFD"/>
-                <constraint firstItem="rBd-94-hz9" firstAttribute="bottom" secondItem="dCe-TU-ocV" secondAttribute="bottom" id="si8-2f-cIc"/>
+                <constraint firstItem="iFT-kG-ODH" firstAttribute="top" secondItem="Y1L-Ku-aq4" secondAttribute="bottom" id="XA6-iF-yhs"/>
+                <constraint firstItem="iFT-kG-ODH" firstAttribute="centerX" secondItem="yZc-Bb-TR3" secondAttribute="centerX" id="h8O-bm-q4u"/>
+                <constraint firstItem="rBd-94-hz9" firstAttribute="bottom" secondItem="iFT-kG-ODH" secondAttribute="bottom" id="jmH-Al-n2n"/>
                 <constraint firstItem="Y1L-Ku-aq4" firstAttribute="trailing" secondItem="rBd-94-hz9" secondAttribute="trailing" id="uoc-tW-Kyg"/>
-                <constraint firstItem="rBd-94-hz9" firstAttribute="trailing" secondItem="dCe-TU-ocV" secondAttribute="trailing" id="uyi-P3-gsv"/>
             </constraints>
             <nil key="simulatedTopBarMetrics"/>
             <nil key="simulatedBottomBarMetrics"/>
@@ -71,4 +70,7 @@
             <point key="canvasLocation" x="-108.5" y="-179"/>
         </view>
     </objects>
+    <resources>
+        <image name="ic_triangle" width="40" height="20"/>
+    </resources>
 </document>
