@@ -433,6 +433,9 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
             }
             
             annotationNode.pivot = SCNMatrix4MakeTranslation(0, -1.1 * scale, 0)
+            
+            
+            annotationNode.updateDistance(distanceToLocation: currentLocation)
         }
         
         SCNTransaction.commit()

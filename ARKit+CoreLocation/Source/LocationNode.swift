@@ -79,11 +79,24 @@ open class LocationAnnotationNode: LocationNode {
         
         super.init(location: location)
         
-        guard let bubbleView: BubbleView = Bundle.main.loadNibNamed("BubbleView", owner: self, options: nil)?.first as? BubbleView else {return}
+        if let plane = createBubble(width: 200, height: 80) {
+            annotationNode.geometry = plane
+        }
+        
+        let billboardConstraint = SCNBillboardConstraint()
+        billboardConstraint.freeAxes = SCNBillboardAxis.Y
+        constraints = [billboardConstraint]
+        
+        addChildNode(annotationNode)
+    }
+    
+    func createBubble(width: CGFloat, height: CGFloat, distance: String! = "0m") -> SCNPlane? {
+        guard let bubbleView: BubbleView = Bundle.main.loadNibNamed("BubbleView", owner: self, options: nil)?.first as? BubbleView else {return nil}
         let width: CGFloat = 200
         let height: CGFloat = 80
         bubbleView.frame = CGRect(x: 0, y: 0, width: width, height: height)
         bubbleView.placeText.text = titlePlace
+        bubbleView.distance.text = distance
         bubbleView.layoutIfNeeded()
         
         UIGraphicsBeginImageContextWithOptions(bubbleView.bounds.size, false, UIScreen.main.scale);
@@ -95,13 +108,17 @@ open class LocationAnnotationNode: LocationNode {
         plane.firstMaterial!.diffuse.contents = screenShot
         plane.firstMaterial!.lightingModel = .constant
         
-        annotationNode.geometry = plane
-
-        let billboardConstraint = SCNBillboardConstraint()
-        billboardConstraint.freeAxes = SCNBillboardAxis.Y
-        constraints = [billboardConstraint]
+        return plane
+    }
+    
+    func updateDistance(distanceToLocation: CLLocation?) {
         
-        addChildNode(annotationNode)
+        if let location = distanceToLocation {
+            let distanceString = "\(String(format: "%.2fm", self.location.distance(from: location)))"
+            if let plane = createBubble(width: 200, height: 80, distance: distanceString) {
+               annotationNode.geometry = plane
+            }
+        }
     }
     
     required public init?(coder aDecoder: NSCoder) {
