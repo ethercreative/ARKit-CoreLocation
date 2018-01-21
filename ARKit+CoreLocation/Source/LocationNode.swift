@@ -92,10 +92,24 @@ open class LocationAnnotationNode: LocationNode {
     
     func createBubble(width: CGFloat, height: CGFloat, distance: String! = "0m") -> SCNPlane? {
         guard let bubbleView: BubbleView = Bundle.main.loadNibNamed("BubbleView", owner: self, options: nil)?.first as? BubbleView else {return nil}
-        let width: CGFloat = 200
+        
+        let offset = CGFloat(54.0)
+        var titlePlaceForBubble =  titlePlace!
+        let maxLengh = 20
+        if titlePlaceForBubble.count > maxLengh {
+            let endIndex = titlePlaceForBubble.index(titlePlaceForBubble.startIndex, offsetBy: maxLengh - 3)
+            titlePlaceForBubble = String(titlePlaceForBubble.prefix(upTo: endIndex))
+            titlePlaceForBubble.append("...")
+        }
+        let textWidth = widthOfString(textString: titlePlaceForBubble, font: bubbleView.placeText.font)
+        let distanceWidth = widthOfString(textString: distance!, font: bubbleView.distance.font)
+        let widthOfBubbleView = offset + textWidth + distanceWidth
+        
+        let width: CGFloat = widthOfBubbleView
         let height: CGFloat = 80
+        
         bubbleView.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        bubbleView.placeText.text = titlePlace
+        bubbleView.placeText.text = titlePlaceForBubble
         bubbleView.distance.text = distance
         bubbleView.layoutIfNeeded()
         
@@ -119,6 +133,12 @@ open class LocationAnnotationNode: LocationNode {
                annotationNode.geometry = plane
             }
         }
+    }
+    
+    func widthOfString(textString: String, font: UIFont) -> CGFloat{
+        let fontAttributes = [NSAttributedStringKey.font: font]
+        let size = textString.size(withAttributes: fontAttributes)
+        return size.width
     }
     
     required public init?(coder aDecoder: NSCoder) {

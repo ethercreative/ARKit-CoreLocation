@@ -26,24 +26,24 @@
                     <rect key="frame" x="0.0" y="0.0" width="375" height="120"/>
                     <subviews>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Minsk" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Zk-G2-WVe">
-                            <rect key="frame" x="20" y="50" width="290" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <rect key="frame" x="20" y="51" width="305" height="19.5"/>
+                            <fontDescription key="fontDescription" type="system" weight="medium" pointSize="16"/>
                             <nil key="textColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="1000" verticalHuggingPriority="1000" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="0m" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bSe-Ck-NcW">
-                            <rect key="frame" x="330" y="50" width="25" height="21"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <nil key="textColor"/>
+                            <rect key="frame" x="337" y="56" width="18" height="14.5"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                     </subviews>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
-                        <constraint firstItem="bSe-Ck-NcW" firstAttribute="leading" secondItem="8Zk-G2-WVe" secondAttribute="trailing" constant="20" id="9SU-xj-NxZ"/>
+                        <constraint firstItem="bSe-Ck-NcW" firstAttribute="bottom" secondItem="8Zk-G2-WVe" secondAttribute="bottom" id="8gi-6d-rjb"/>
+                        <constraint firstItem="bSe-Ck-NcW" firstAttribute="leading" secondItem="8Zk-G2-WVe" secondAttribute="trailing" constant="12" id="9SU-xj-NxZ"/>
                         <constraint firstItem="8Zk-G2-WVe" firstAttribute="centerY" secondItem="Y1L-Ku-aq4" secondAttribute="centerY" id="Upt-vY-gyW"/>
                         <constraint firstAttribute="trailing" secondItem="bSe-Ck-NcW" secondAttribute="trailing" constant="20" id="daF-G8-8rm"/>
-                        <constraint firstItem="bSe-Ck-NcW" firstAttribute="centerY" secondItem="Y1L-Ku-aq4" secondAttribute="centerY" id="wGr-a4-p9K"/>
                         <constraint firstItem="8Zk-G2-WVe" firstAttribute="leading" secondItem="Y1L-Ku-aq4" secondAttribute="leading" constant="20" id="yEG-Go-rWJ"/>
                     </constraints>
                 </view>
