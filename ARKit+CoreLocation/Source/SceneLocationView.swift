@@ -134,7 +134,7 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
         session.run(configuration)
         
         updateEstimatesTimer?.invalidate()
-        updateEstimatesTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(SceneLocationView.updateLocationData), userInfo: nil, repeats: true)
+        updateEstimatesTimer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(SceneLocationView.updateLocationData), userInfo: nil, repeats: false)
     }
     
     public func pause() {
@@ -339,14 +339,34 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
     }
     
     func updatePositionAndScaleOfLocationNodes() {
+		let dispatchGroup = DispatchGroup()
+		
+		var delay : Double = 0
+		
         for locationNode in locationNodes {
+			dispatchGroup.enter()
+			
+			delay = delay + 0.032
+			
             if locationNode.continuallyUpdatePositionAndScale {
-                updatePositionAndScaleOfLocationNode(locationNode: locationNode, animated: true)
-            }
+				DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+					self.updatePositionAndScaleOfLocationNode(locationNode: locationNode, animated: true)
+					
+					dispatchGroup.leave()
+				};
+            } else {
+				dispatchGroup.leave()
+			}
         }
+		
+		dispatchGroup.notify(queue: .main) {
+			DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+				self.updateLocationData()
+			}
+		}
     }
     
-    public func updatePositionAndScaleOfLocationNode(locationNode: LocationNode, initialSetup: Bool = false, animated: Bool = false, duration: TimeInterval = 0.1) {
+    public func updatePositionAndScaleOfLocationNode(locationNode: LocationNode, initialSetup: Bool = false, animated: Bool = false, duration: TimeInterval = 5) {
         guard let currentPosition = currentScenePosition(),
             let currentLocation = currentLocation() else {
             return
